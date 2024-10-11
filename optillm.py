@@ -303,6 +303,12 @@ def proxy():
             client = OpenAI(api_key=api_key, base_url=base_url)
         else:
             client = OpenAI(api_key=api_key)
+    elif model.startswith("local-llm") or model.startswith("gpt"):
+        api_key = bearer_token
+        if base_url != "":
+            client = OpenAI(api_key=api_key, base_url=base_url)
+        else:
+            client = OpenAI(api_key=api_key)
     else: 
         client = default_client
 
