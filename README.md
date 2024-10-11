@@ -4,7 +4,7 @@
 
 
 This fork version is improved to use a local LLM, such as llama.cpp.
-Unlike the original version, which cannot run Best of N Sampling (BON), Monte Carlo Tree Search (MCTS), Mixture of Agents (MOA), and PVG (Presumably PVG), this version supports them.
+Unlike the original version, which cannot run Best of N Sampling (BON), Monte Carlo Tree Search (MCTS), Mixture of Agents (MOA), and PVG (PV Game), this version supports them.
 
 #### Quick Start
 
