@@ -6,7 +6,7 @@
 This fork version is improved to use a local LLM, such as llama.cpp and ollama.
 Unlike the original version, which cannot run Best of N Sampling (BON), Monte Carlo Tree Search (MCTS), Mixture of Agents (MOA), and PVG (PV Game), this version supports them.
 
-#### Quick Start with llama.cpp
+### Quick Start with llama.cpp
 
 [1] Set OPENAI_API_KEY
 
@@ -60,7 +60,7 @@ response = client.chat.completions.create(
 print(response)
 ```
 
-#### Quick Start with ollama
+### Quick Start with ollama
 
 [1] Set OPENAI_API_KEY="no_key"
 
@@ -80,22 +80,15 @@ gemma:7b           a72c7f4d0a15    5.0 GB    4 months ago
 
 [3] Start optillm
 
-Set the model you want to use with the `--model` option.
 
 ```
-$ python ./optillm.py --base_url http://127.0.0.1:11434/v1 --model ollama/lamma3.1:latest
-
-** OR **
-
-$ python ./optillm.py --base_url http://127.0.0.1:11434/v1 --model ollama/phi3.5:latest
+$ python ./optillm.py --base_url http://127.0.0.1:11434/v1
 ```
 
 
 [4] Run your script
 
 Set the model you need using the format "APPROACH-ollama/MODEL," such as "mcts-ollama/llama3.1", "bon-ollama/phi3.5"
-
-Note: The model you specify here will be ignored. The model set in the optillm command will be used instead.
 
 ```
 from openai import OpenAI
