@@ -6,7 +6,7 @@ def mixture_of_agents(system_prompt: str, initial_query: str, client, model: str
     moa_completion_tokens = 0
     completions = []
 
-    if model == 'local-llm':
+    if model == 'llama.cpp' or model.startswith('ollama'):
         n = 3
         for _ in range(n):
             response = client.chat.completions.create(

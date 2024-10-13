@@ -9,8 +9,8 @@ def best_of_n_sampling(system_prompt: str, initial_query: str, client, model: st
                 {"role": "user", "content": initial_query}]
     
     completions = []
-    
-    if model == 'local-llm':
+
+    if model == 'llama.cpp' or model.startswith('ollama'):
         for _ in range(n):
             response = client.chat.completions.create(
                 model=model,

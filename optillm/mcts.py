@@ -111,7 +111,7 @@ class MCTS:
         n = 3
 
         logger.info(f"Requesting {n} completions from the model")
-        if self.model == 'local-llm':
+        if self.model == 'llama.cpp' or model.startswith('ollama'):
             for _ in range(n):
                 response = self.client.chat.completions.create(
                     model=self.model,

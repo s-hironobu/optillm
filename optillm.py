@@ -49,7 +49,11 @@ def get_config():
     # OpenAI, Azure, or LiteLLM API configuration
     if os.environ.get("OPENAI_API_KEY"):
         API_KEY = os.environ.get("OPENAI_API_KEY")
-        default_client = OpenAI(api_key=API_KEY)
+        base_url = server_config['base_url']
+        if base_url != "":
+            default_client = OpenAI(api_key=api_key, base_url=base_url)
+        else:
+            default_client = OpenAI(api_key=API_KEY)
     elif os.environ.get("AZURE_OPENAI_API_KEY"):
         API_KEY = os.environ.get("AZURE_OPENAI_API_KEY")
         API_VERSION = os.environ.get("AZURE_API_VERSION")
@@ -303,7 +307,7 @@ def proxy():
             client = OpenAI(api_key=api_key, base_url=base_url)
         else:
             client = OpenAI(api_key=api_key)
-    elif model.startswith("local-llm"):
+    elif model.startswith("llama.cpp"):
         api_key = bearer_token
         if base_url != "":
             client = OpenAI(api_key=api_key, base_url=base_url)

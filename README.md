@@ -3,7 +3,7 @@
 ## Additional Introduction
 
 
-This fork version is improved to use a local LLM, such as llama.cpp.
+This fork version is improved to use a local LLM, such as llama.cpp and ollama.
 Unlike the original version, which cannot run Best of N Sampling (BON), Monte Carlo Tree Search (MCTS), Mixture of Agents (MOA), and PVG (PV Game), this version supports them.
 
 #### Quick Start
@@ -30,7 +30,7 @@ $ python ./optillm.py --base_url http://127.0.0.1:8080/v1
 
 [4] Run your script
 
-Set the model you need using the format "Approach-local-llm," such as "mcts-local-llm."
+Set the model you need using the format "APPROACH-llama.cpp," such as "mcts-llama.cpp."
 
 ```
 from openai import OpenAI
@@ -39,12 +39,12 @@ OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
 OPENAI_BASE_URL = "http://localhost:8000/v1"
 client = OpenAI(api_key=OPENAI_KEY, base_url=OPENAI_BASE_URL)
 
-model="mcts-local-llm"
-# model="rto-local-llm"
-# model="rstar-local-llm"
-# model="moa-local-llm"
-# model="bon-local-llm"
-# model="pvg-local-llm"
+model="mcts-llama.cpp"
+# model="rto-llama.cpp"
+# model="rstar-llama.cpp"
+# model="moa-llama.cpp"
+# model="bon-llama.cpp"
+# model="pvg-llama.cpp"
 
 response = client.chat.completions.create(
   model=model,
@@ -59,6 +59,68 @@ response = client.chat.completions.create(
 
 print(response)
 ```
+
+### Quick Start with Ollama
+
+[1] Set OPENAI_API_KEY="no_key"
+
+[2] Check ollama list
+
+```
+$ ollama list
+NAME               ID              SIZE      MODIFIED
+phi3.5:latest      61819fb370a3    2.2 GB    5 weeks ago
+llama3.1:latest    62757c860e01    4.7 GB    2 months ago
+llava:13b          0d0eb4d7f485    8.0 GB    3 months ago
+solar:latest       059fdabbe6e6    6.1 GB    4 months ago
+mistral:latest     2ae6f6dd7a3d    4.1 GB    4 months ago
+phi3:medium        1e67dff39209    7.9 GB    4 months ago
+gemma:7b           a72c7f4d0a15    5.0 GB    4 months ago
+```
+
+[3] Start optillm
+
+Set the model you want to use with the `--model` option.
+
+```
+$ python ./optillm.py --base_url http://127.0.0.1:11434/v1 --model ollama/lamma3.1:latest
+
+** OR **
+
+$ python ./optillm.py --base_url http://127.0.0.1:11434/v1 --model ollama/phi3.5:latest
+```
+
+
+[4] Run your script
+
+Set the model you need using the format "APPROACH-ollama/MODEL," such as "mcts-ollama/llama3.1", "bon-ollama/phi3.5"
+
+Note: The model you specify here will be ignored. The model set in the optillm command will be used instead.
+
+```
+from openai import OpenAI
+
+OPENAI_KEY = os.environ.get("OPENAI_API_KEY")
+OPENAI_BASE_URL = "http://localhost:8000/v1"
+client = OpenAI(api_key=OPENAI_KEY, base_url=OPENAI_BASE_URL)
+
+model="mcts-ollama/llama3.1"
+# model="bon-ollama/phi3.5"
+
+response = client.chat.completions.create(
+  model=model,
+  messages=[
+    {
+      "role": "user",
+      "content": "Write a Python program to build an RL model to recite text from any position that the user provides, using only numpy."
+    }
+  ],
+  temperature=0.2
+)
+
+print(response)
+```
+
 
 ## Original Introduction
 

@@ -31,7 +31,8 @@ def generate_solutions(client, system_prompt: str, query: str, model: str, num_s
         {"role": "user", "content": query}
     ]
     solutions = []
-    if model == 'local-llm':
+
+    if model == 'llama.cpp' or model.startswith('ollama'):
         for _ in range(num_solutions):
             response = client.chat.completions.create(
                 model=model,
