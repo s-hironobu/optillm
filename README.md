@@ -6,7 +6,7 @@
 This fork version is improved to use a local LLM, such as llama.cpp and ollama.
 Unlike the original version, which cannot run Best of N Sampling (BON), Monte Carlo Tree Search (MCTS), Mixture of Agents (MOA), and PVG (PV Game), this version supports them.
 
-#### Quick Start
+#### Quick Start with llama.cpp
 
 [1] Set OPENAI_API_KEY
 
@@ -19,7 +19,7 @@ $ export OPENAI_API_KEY="no_key"
 [2] Start llama-server
 
 ```
-$ ./llama-server  -m models/Phi-3-medium-4k-instruct-Q4_K_S.gguf
+$ ./llama-server -m models/Phi-3-medium-4k-instruct-Q4_K_S.gguf
 ```
 
 [3] Start optillm
@@ -60,7 +60,7 @@ response = client.chat.completions.create(
 print(response)
 ```
 
-### Quick Start with Ollama
+#### Quick Start with ollama
 
 [1] Set OPENAI_API_KEY="no_key"
 
