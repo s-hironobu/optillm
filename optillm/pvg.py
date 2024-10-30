@@ -30,15 +30,31 @@ def generate_solutions(client, system_prompt: str, query: str, model: str, num_s
         {"role": "system", "content": f"{system_prompt}\n{role_instruction}\nYou are in {role} mode."},
         {"role": "user", "content": query}
     ]
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        n=num_solutions,
-        max_tokens=4096,
-        temperature=temperature,
-    )
-    pvg_completion_tokens += response.usage.completion_tokens
-    solutions = [choice.message.content for choice in response.choices]
+
+    solutions = []
+
+    if model == 'llama.cpp' or model.startswith('ollama'):
+        for _ in range(num_solutions):
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                n=1,
+                max_tokens=4096,
+                temperature=temperature,
+            )
+            pvg_completion_tokens += response.usage.completion_tokens
+            solutions.append(response.choices[0].message.content.strip())
+    else:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            n=num_solutions,
+            max_tokens=4096,
+            temperature=temperature,
+        )
+        pvg_completion_tokens += response.usage.completion_tokens
+        solutions = [choice.message.content for choice in response.choices]
+
     logger.debug(f"Generated {role} solutions: {solutions}")
     return solutions
 

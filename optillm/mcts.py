@@ -111,15 +111,28 @@ class MCTS:
         n = 3
 
         logger.info(f"Requesting {n} completions from the model")
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            max_tokens=4096,
-            n=n,
-            temperature=1
-        )
-        completions = [choice.message.content.strip() for choice in response.choices]
-        self.completion_tokens += response.usage.completion_tokens
+        if self.model == 'llama.cpp' or model.startswith('ollama'):
+            for _ in range(n):
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    max_tokens=4096,
+                    n=1,
+                    temperature=1
+                )
+                completions.append(response.choices[0].message.content.strip())
+                self.completion_tokens += response.usage.completion_tokens
+        else:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                max_tokens=4096,
+                n=n,
+                temperature=1
+            )
+            completions = [choice.message.content.strip() for choice in response.choices]
+            self.completion_tokens += response.usage.completion_tokens
+
         logger.info(f"Received {len(completions)} completions from the model")
         return completions
 

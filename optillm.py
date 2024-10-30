@@ -347,6 +347,14 @@ def proxy():
             client = OpenAI(api_key=api_key, base_url=base_url)
         else:
             client = OpenAI(api_key=api_key)
+    elif model.startswith("llama.cpp"):
+        # LiteLLM does not support llama.cpp yet, so we use the OpenAI API.
+        # https://docs.litellm.ai/docs/providers
+        assert base_url != ""
+        api_key = bearer_token
+        client = OpenAI(api_key=api_key, base_url=base_url)
+    elif model.startswith("ollama"):
+        client = LiteLLMWrapper()
     else: 
         client = default_client
 

@@ -10,16 +10,27 @@ def best_of_n_sampling(system_prompt: str, initial_query: str, client, model: st
     
     completions = []
     
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        max_tokens=4096,
-        n=n,
-        temperature=1
-    )
-    completions = [choice.message.content for choice in response.choices]
-    logger.info(f"Generated {len(completions)} initial completions. Tokens used: {response.usage.completion_tokens}")
-    bon_completion_tokens += response.usage.completion_tokens
+    if model == 'llama.cpp' or model.startswith('ollama'):
+        for _ in range(n):
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                max_tokens=4096,
+                n=1,
+                temperature=1
+            )
+            completions.append(response.choices[0].message.content.strip())
+            bon_completion_tokens += response.usage.completion_tokens
+    else:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_tokens=4096,
+            n=n,
+            temperature=1
+        )
+        completions = [choice.message.content for choice in response.choices]
+        bon_completion_tokens += response.usage.completion_tokens
     
     # Rate the completions
     rating_messages = messages.copy()

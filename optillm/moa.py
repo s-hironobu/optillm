@@ -8,18 +8,35 @@ def mixture_of_agents(system_prompt: str, initial_query: str, client, model: str
     completions = []
 
     logger.debug(f"Generating initial completions for query: {initial_query}")
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": initial_query}
-        ],
-        max_tokens=4096,
-        n=3,
-        temperature=1
-    )
-    completions = [choice.message.content for choice in response.choices]
-    moa_completion_tokens += response.usage.completion_tokens
+    if model == 'llama.cpp' or model.startswith('ollama'):
+        n = 3
+        for _ in range(n):
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": initial_query}
+                ],
+                max_tokens=4096,
+                n=1,
+                temperature=1
+            )
+            completions.append(response.choices[0].message.content.strip())
+            moa_completion_tokens += response.usage.completion_tokens
+    else:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": initial_query}
+            ],
+            max_tokens=4096,
+            n=3,
+            temperature=1
+        )
+        completions = [choice.message.content for choice in response.choices]
+        moa_completion_tokens += response.usage.completion_tokens
+
     logger.info(f"Generated {len(completions)} initial completions. Tokens used: {response.usage.completion_tokens}")
     
     logger.debug("Preparing critique prompt")
